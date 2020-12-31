@@ -1,0 +1,397 @@
+openapi: 3.0.0
+info:
+  title: Simple Blog API
+  description: A simple blog api that allows users to login, create blog posts and interact with other blog posts
+  version: 0.1
+paths:
+  /users:
+    get:
+      summary: Returns a list of all users.
+      tags:
+        - users
+      description: A list of all registered users
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      summary: Creates a new user
+      tags:
+        - users
+      description: Creates a new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /users/{id}:
+    get:
+      summary: Get a specific user by id.
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user to return.
+      description: Get a specific user by id
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+    patch:
+      summary: Updates an existing user
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user to update.
+      description: Updates an existing user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+    delete:
+      summary: Deletes a user
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user to delete.
+      description: Deletes a user
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /posts:
+    get:
+      summary: Returns a list of all posts.
+      security:
+        - BearerAuth
+      tags:
+        - posts
+      description: A list of all posts
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      summary: Creates a new post
+      security:
+        - BearerAuth
+      tags:
+        - posts
+      description: Creates a new post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Post"
+      responses:
+        "201": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /posts/{id}:
+    get:
+      summary: Get a specific post by id.
+      security:
+        - BearerAuth
+      tags:
+        - posts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the post to return.
+      description: Get a specific post by id
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+    patch:
+      summary: Updates an existing post
+      security:
+        - BearerAuth
+      tags:
+        - posts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the post to update.
+      description: Updates an existing post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostUpdate"
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+    delete:
+      summary: Deletes a post
+      security:
+        - BearerAuth
+      tags:
+        - posts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the post to delete.
+      description: Deletes a post
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /posts/like/{id}:
+    get:
+      summary: Like a post
+      security:
+        - BearerAuth
+      tags:
+        - posts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the post to like.
+      description: Like a post
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /posts/unlike/{id}:
+    get:
+      summary: Unlike a post
+      security:
+        - BearerAuth
+      tags:
+        - posts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the post to unlike
+      description: Unlike a post
+      responses:
+        "200": # status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - username
+        - password
+    UserUpdate:
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    Post:
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        author:
+          type: string
+      required:
+        - title
+        - author
+    PostUpdate:
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+  responses:
+    InternalError:
+      description: "An internal error occurred"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    BadRequest:
+      description: "Invalid Request"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    Unauthorized:
+      description: "Unauthorized"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
