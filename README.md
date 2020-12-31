@@ -25,7 +25,7 @@ npm install
 2. Run the application using
 
 ```
-npm start or npm run devStart (uses nodemon to monitor for new changes)
+npm start
 ```
 
 or to restart when changes are made use. The command below makes use of nodemon to monitor changes in your code
