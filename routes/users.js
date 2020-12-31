@@ -26,11 +26,19 @@ router.post(
   body("password", "Please enter a password with a 6 or more characters")
     .exists()
     .isLength({ min: 6 }),
+
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    let existingUser = await User.findOne({ email: req.body.email });
+    if (existingUser != null) {
+      return res
+        .status(409)
+        .json({ message: "A User with this email already exists" });
+    }
+
     const user = new User({
       username: req.body.username,
       email: req.body.email,

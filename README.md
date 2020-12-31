@@ -40,6 +40,12 @@ npm run devStart
 http://localhost:3000/docs
 ```
 
+4. The tests for the application can be run using
+
+```
+npm test
+```
+
 ## Built With
 
 - [express](https://expressjs.com/) - The web framework used
